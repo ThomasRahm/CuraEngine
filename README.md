@@ -1,142 +1,332 @@
-CuraEngine
-==========
-The CuraEngine is a C++ console application for 3D printing GCode generation. It has been made as a better and faster alternative to the old Skeinforge engine.
+# Tree Support V2 Mod
+I reimplemented the tree support, as the current implementation does not meet my expectations.
 
-The CuraEngine is pure C++ and uses Clipper from http://www.angusj.com/delphi/clipper.php
-Furthermore it depends on libArcus by Ultimaker, which can be found at http://github.com/Ultimaker/libArcus
+# How the new tree support looks:
+![New tree support](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/New%2520TS%2520to%2520BP.PNG)
 
-This is just a console application for GCode generation. For a full graphical application look at https://github.com/Ultimaker/Cura which is the graphical frontend for CuraEngine.
 
-The CuraEngine can be used seperately or in other applications. Feel free to add it to your application. But please take note of the License.
+# How to use:
 
-License
-=======
-CuraEngine is released under terms of the AGPLv3 License.
-Terms of the license can be found in the LICENSE file. Or at http://www.gnu.org/licenses/agpl.html
+[Download latest version with error messages](https://github.com/ThomasRahm/CuraEngine/releases/latest/download/Tree.Support.2.Mod.Cura.4.10.With.error.messages.zip) (Recommended)  
+[Download latest version without error messages](https://github.com/ThomasRahm/CuraEngine/releases/latest/download/Tree.Support.2.Mod.Cura.4.10.Without.error.messages.zip) (If the error messages annoy you)  
 
-But in general it boils down to: You need to share the source of any CuraEngine modifications if you make an application with the CuraEngine. (Even if you make a web-based slicer, you still need to share the source!)
+There are two versions available to download:  
+One will behave like regular Cura would, the other one will display a message if an issue is detected (at most 2 messages per slice, one for performance issues and one for logic issues). I would prefer if you would use this one, so you can easier see when an issue occurs. Slicing is paused while the message is displayed.
 
-How to Install
-==============
-1. Clone the repository from https://github.com/Ultimaker/CuraEngine.git (the URL at the right hand side of this page).
-2. Install Protobuf >= 3.0.0 (see below)
-3. Install libArcus (see https://github.com/Ultimaker/libArcus)
+It is based on Cura 4.10, only the tree support code was replaced. Just run the Cura.exe after extracting the folder. You may need to import your profile (Just export the one you want to use and import it into this one).
 
-In order to compile CuraEngine, either use CMake or start a project in your preferred IDE. 
-CMake compilation:
 
-1. Navigate to the CuraEngine directory and execute the following commands
-2. ```$ mkdir build && cd build```
-3. ```$ cmake ..```
-4. ```$ make```
+# What are bugs
 
-Project files generation:
+These are the things I consider bugs with my new tree support:
 
-1. Navigate to the CuraEngine directory and execute the following commands
-2. ```cmake . -G "CodeBlocks - Unix Makefiles"```
-3. (for a list of supported IDE's see http://www.cmake.org/Wiki/CMake_Generator_Specific_Information#Code::Blocks_Generator)
+* The progress bar disappears (back to 0%) or becomes stuck.
+* It takes longer with the new implementation than with the old one (Assuming that the used feature in fact is implemented in the old tree support e.g. per mesh settings are not)  
+* The result violates given settings.  
+* An error message occurs if you use the version that displays error messages. This happens when the implementation detects that something went wrong. **The effect of an error may not be visible in the result, but it still should be fixed.**  
 
-Building with MSVC
-------------------
-Building CuraEngine with the MSVC toolchain is similar to the cmake instructions above with a couple of extra options.
-- If libArcus is not installed to a location on your PATH you will need to pass the install location of the library using ```-DCMAKE_PREFIX_PATH```.
-- If you wish to statically link the C runtime pass ```-DMSVC_STATIC_RUNTIME=ON``` when configuring using cmake.
-    - Note that libArcus should also be built with this option as well or you will get linker errors.
-- Vcpkg may be used to install protobuf and cppunit (only required if you would like to build the CuraEngine test suite).
+## How to report a bug
+Open an issue [here](https://github.com/ThomasRahm/CuraEngine/issues).  
+Please send me the Profile and Model and a description of the bug. Just zip both and upload it to the github issue by dragging it into the text-field (Only works up to 25 mb). **Only upload the model if you are sure that this does not cause any issues with copyright!** If the model is available to download somewhere else (e.g. thingiverse) I prefer a link to this for the model. You will see the option to select bug-report when you open an issue, and all information I would like to have will be listed there.  
+The error-message alone is not really helpful, as often the detection of an error happens after it actually occurred.
 
-Installing Protobuf (Linux)
--------------------
-1. Be sure to have libtool installed.
-2. Download protobuf from https://github.com/google/protobuf/releases (download ZIP and unZIP at desired location, or clone the repo). The protocol buffer is used for communication between the CuraEngine and the GUI.
-3. Run ```autogen.sh``` from the protobuf directory: 
-   ```$ ./autogen.sh```
-4. ```$ ./configure```
-5. ```$ make```
-6. ```# make install```  
-   (Please note the ```#```. It indicates the need of superuser, as known as root, privileges.)
-7. (In case the shared library cannot be loaded, you can try ```sudo ldconfig``` on Linux systems)
+My goal is a universal set and forget solution, so if you have any feedback, e.g. encounter a situation where regular support or the current tree support produce a superior result compared to my tree support implementation, I am happy to hear it.
 
-Running
-=======
-Other than running CuraEngine from a frontend, such as Ultimaker/Cura, one can run CuraEngine from the command line.
-For that one needs a settings JSON file, which can be found in the Ultimaker/Cura repository.
-Note that the structure of the json files has changed since 2.1. In the corresponding branch of the Cura repository you can find how the json files used to be structured.
+## Currently known issues:
+* Slicing with 0% cross support infill causes the slice progress to hang. This is not an issue of my implementation and to my understanding also occurs in the official version. [Bug report of this issue](https://github.com/Ultimaker/CuraEngine/issues/1412).  
+* There are issues when `Minimum Support X/Y Distance` is larger than `Support X/Y Distance`. This can trigger an error message if the version displaying them is used. I will not fix this one, except by maybe disallowing it in the UI, as I think the assumption that a minimum is not larger than the expected one is reasonable.
 
-An example run for an UM2 machine looks as follows:
-* Navigate to the CuraEngine directory and execute the following
+## Poll about the expected behavior of Minimum Support Area  
+There is a setting `Minimum Support Area` in Cura, which I am not sure if I interpret the same way someone without knowledge of the internal working of it would. 
+When using regular support it causes no overhang smaller than this to be supported, which causes no support polygon to be smaller than this.  
+For the tree support, should this also limit how large an overhang has to be before it is supported or should it cause the tip of a branch to have at least this area (or maybe both)?  
+**[I made a poll](https://www.strawpoll.me/45550253)** and would like your feedback. Currently the first interpretation (overhang area size) is implemented.  
+
+# Settings:
+
+## Recommended settings
+I recommend enabling roofs and setting a reasonable `Minimum Support Roof Area` (I use 10 mm²). My implementation will make sure to correctly support the lines generated by the support roof. If no roof is possible the branches will try to avoid moving for as many layer as the roof is thick. They will generate as regular tree support branches, as i have serious doubts about the stability of roofs in branches.  
+Do not use concentric floor. It will generate as intended (by my understanding at least), but I suspect it will not print (it will be obvious when you see it) when support infill is low.  
+Set `Minimum support area` to 0, higher values may cause very pointy overhangs to not be supported (as intended by my current understanding of this feature)
+
+## New Tree Support Settings
+
+<details>
+  <summary>Tree Support Preferred Branch Angle vs Tree Support Maximum Branch Angle</summary>
+  
+  `Tree Support Maximum Branch Angle` is ONLY used when `Tree Support Preferred Branch Angle` is not enough to avoid the model. This causes branches to only move with `Tree Support Preferred Branch Angle` to merge with other branches. 
+    
+  Idea behind this is that Tree Support Preferred Branch Angle is a very stable angle, but if some parts could not be supported with the smaller angle the larger angle can be used to reach these parts.  
+
+ ![Slow vs Fast branch angle](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Slow%2520vs%2520Fast.PNG)  
+  
+  
+  
+</details>
+
+<details>
+  <summary>Tree Support Diameter Increase To Model</summary>
+   Branches that can reach the buildplate and branches that cannot are able to merge. This setting limits how much the diameter of the branch connecting with the model can be increased by such merges.  
+
+   This setting is intended to specify how important it is that connections with the model are avoided (the lower this setting, the less contact area with the model).
+  
+   Small Diameter Increase To Model:  
+   ![Small Diameter increase to model](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Diameter%2520increase%2520to%2520model%2520small.PNG)
+   
+   Large Diameter Increase To Model:  
+   ![Large Diameter increase to model](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Diameter%2520increase%2520to%2520model%2520large.PNG)
+
+  
+</details>
+
+<details>
+  <summary>Tree Support Minimum Height To Model</summary>
+  If only a few layers space are left between the position where the branch begins and where it ends, removing the support is impossible. This setting removes all branches that have a height lower than `Tree Support Minimum Height To Model` to prevent this. Only branches that rest on the model are removed.
+  
+  Small Minimum Height To Model:  
+  ![Small Diameter increase to model](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Minimum%2520height%2520to%2520model%2520small.PNG)
+
+  Large Minimum Height To Model:  
+  ![Large Diameter increase to model](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Minimum%2520Height%2520to%2520model%2520large.PNG)
+  
+</details>
+
+<details>
+  <summary>Tree Support Initial Layer Diameter</summary>
+  Branches try to ensure to reach this diameter at layer 0.
+  
+  Large Initial Layer Diameter:  
+  ![Initial Layer Diameter](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Inital%2520Layer%2520Diameter.PNG)
+  
+  Small Initial Layer Diameter:  
+  ![Initial Layer Diameter](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Inital%2520Layer%2520Diameter%2520Small.PNG)
+  
+</details>
+
+<details>
+  <summary>Tree Support Branch Density</summary>
+  A percentage of space that has to be filled by the top most layer of a branch aka the layer that supports the overhang. When a roof is supported the overhang is the line of the roof. When no support roof is used it behaves similarly to the supporting(top most) layer when using regular support. High values (depends on your other settings) of >35% can cause the resulting support areas to overlap. This causes cura to merge them to a single area, as cura assumes every support area is supported by support areas below. If a low support infill is used this assumption is wrong. There is nothing reasonable I can do to prevent this, so in this case adjust your support infill accordingly.
+
+  Simulated regular support pattern:   
+  ![Simulate regular support pattern](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Simulates%2520regular%2520support%2520pattern.PNG)
+
+</details>
+
+
+Tree Support Branch Diameter and Tree Support Branch Diameter Angle behave like in the current tree support implementation, but `Tree Support Branch Diameter Angle` is ignored when a diameter increase would invalidate a branch, as a small branch has a higher chance of supporting the model than no branch at all.
+
+# What does it do better:
+<details>
+  <summary>Uses significant less filament.</summary>
+    Also makes my implementation much easier to remove from the model.
+
+  Current tree support:  
+  ![Current tree support](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Old%2520TS.PNG)
+
+  My tree support:  
+  ![New tree support](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/New%2520TS%2520to%2520BP.PNG)
+  
+  Comparison of material usage:  
+  ![Comparison](https://raw.githubusercontent.com/gist/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Performance_material.svg)
+
+  
+  Disclaimer: This is only the material used for support structures, not the whole model. The measuring unit is mm of 1.75mm diameter filament, as displayed in cura. Measurement was done in the 4.7.1 version, and exact numbers could differ slightly. 
+  
+</details>
+
+<details>
+  <summary>Can handle large branch angles.</summary>
+
+  Current tree support:  
+  ![Current tree support](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Old%2520TS%2520Not%2520Working%2520with%2520high%2520angles.PNG)
+
+  My tree support:  
+  ![New tree support](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/New%2520TS%2520Working%2520fine%2520with%2520high%2520angles.PNG)
+  
+</details>
+
+<details>
+  <summary>Supports Roofs more consistently.</summary>
+
+  Current tree support:  
+  ![Current tree support](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Old%2520Ts%2520ROOF.PNG)
+
+  My tree support:  
+  ![New tree support](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/New%2520TS%2520ROOF.PNG)
+  
+</details>
+
+<details>
+  <summary>Branches avoid support blocker.</summary>
+
+  ![Branches avoid support blocker](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Avoid%2520Support%2520Blocker.PNG)
+
+</details>
+
+<details>
+  <summary>Setting applicable now on a per-mesh basis.</summary>
+    All tree support related settings are now settable per mesh and support related settings are correctly used by the tree support. This may increase slicing time drastically for settings that are not only relevant on the top most support layers. So to avoid slicing times being longer by factor 10 try not to slice 10 different models with different branch radii (Slicing 2 models with different should not take much longer than slicing 2 times). Trees with settings that are incompatible with each other can not merge and will avoid each other. 
+    
+   Few settings differences allow merges:  
+  ![Different interface settings can merge](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Different%2520Settings%2520Merge.PNG)
+
+</details>
+
+<details>
+  <summary>More variables of the regular support are now supported by the tree support</summary>
+    The newly supported settings are: `Support Distance Priority`, `Support Horizontal Expansion`, `Support Interface Horizontal Expansion`, `Minimum Support Roof Area` and `Minimum Support Floor Area` (Some of these were enabled in the UI, but did not do anything if I understand the code correctly) and `Minimum Support Area` (though I would recommend leaving this setting at 0)
+</details>
+
+<details>
+<summary>Slices faster on multicore cpus.</summary>
+Measured was the time it takes to generate the tree support for the test model (hobgoblin).  
+
+  ![Slice performance graph](https://raw.githubusercontent.com/gist/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Performance_times.svg)
+  
+
+Settings used for benchmarking:  
+[Profile for current tree support](https://gist.github.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Test_Live.curaprofile)  
+[Profile for my tree support implementation](https://gist.github.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Test_Me.curaprofile)  
+  
+</details>
+
+
+## Further attributes this implementation has:
+
+If a model is sliced twice on the same machine, the same trees will result. If this is somehow not the case something went very wrong. (Trees generated on systems with a different amount of threads could theoretically differ).  
+Every point that can be supported with the given Branch Angle limitations, will be supported when the support can only rest on the build plate. This means some other settings may be paused to ensure such behavior. For example: `Tree Support Branch Diameter Angle` will be paused if a radius increase would cause a branch to become invalid.
+
+# How the algorithm generating the trees works
+
+This explains the idea behind the algorithm. As such it is simplified a fair bit to avoid explaining fixes for some edge cases.
+<details>
+    <summary>0. The model</summary>
+    
+![The model](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Tree%2520Support_0_Model.png)
+
+</details>
+
+<details>
+
+<summary>1. Calculate avoidance</summary>
+An avoidance is an area that has to be avoided to achieve certain given results. For example an area in which a branch would be unable to reach the buildplate has to be avoided, if the support is not allowed to rest on the model.
+This idea is identical to the current tree support. My implementation just uses a lot more avoidances(slow, fast, slow to model, fast to model, fast without holes, fast without holes to model), and precalculates them in parallel. 
+Avoidances are calculated from the bottom up.
+
+![Avoidance](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Tree%2520Support_1_avoidance.png)
+
+</details>
+
+<details>
+<summary>2. Generate influence areas</summary>
+An influence area is an area,in which every point of the represented current branch, can reach all support points it has to support. Is is similar to an avoidance, but other that the avoidance, it represents possible center point areas, rather than excluding impossible ones. If two influence areas intersect, only the intersection will be used going forward. This causes branches to merge.
+Influence areas are calculated from the top downwards, as they grow from the overhang downwards.
+
+![Influence areas](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Tree%2520Support_2_influence_areas.png)
+
+![Influence areas 2](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Tree%2520Support_2_influence_areas_2.png)
+
+</details>
+
+<details>
+<summary>3. Generate tree path</summary>
+Using the influence areas, the center points of the circles that build the branches are set.
+This happens from the bottom up.
+
+![Tree path](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Tree%2520Support_4_tree_paths.png)
+
+</details>
+
+<details>
+<summary>4. Draw Tree</summary>
+The circles, which center-point was calculated in 3. are drawn. Here also happens a fair bit of post processing to avoid edge-cases by the fact that the drawn radius in the tip of a branch is always increased (for stability reasons), even if a normal circle would not fit. 
+
+![Resulting tree](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Tree%2520Support_5_Tree.png)
+
+</details>
+
+# Hints for compiling
+
+The code for the modified tree support can be found in the `tree_support_2` branch. **The code in the master branch is old, and should be ignored.** If you want to compile the version with error messages enabled, the code can be found in `tree_support_2_error_detection`. The code for the error messages is Windows only.
+
+To compile it yourself mostly follow the official [cura-build](https://github.com/Ultimaker/cura-build) guide (I recommend using the [cura-build-environment](https://github.com/Ultimaker/cura-build-environment) to build all requirements). This part is not designed to be user-friendly, it is to provide hints to the very few of you who want to compile it themselves for some reason. Most modifications are to either ensure that the version contains a unique identifier ("_TS2") to avoid issues with cached definitions (found in *AppData\Local\cura*) or to workaround issues with Windows 10 (as for obvious reasons most devs choose a more reasonable OS to develop on (read Linux), the build process is not working flawless on Windows 10). I never compiled this under Linux, so you are even more on your own there, but I suspect just changing the cura-engine cmake to point the the modified code and contain the unique identifier, setting the correct version and replacing the fdmprinter.def.json could be enough.  
+
+(Remember to ensure cura-build-environment is in your path variable. If you have issues building/using the build-environment on Windows 10 check if your issue is [one of the few I encountered](https://github.com/Ultimaker/cura-build-environment/issues/95))
+
+## Set Version to 4.x_TS2 (here done by editing the CMakeLists file)
+
+CxFreeze does not support strings in version numbers, at it tries to set them to the metadata of the executable. So as a workaround the _TS2 will have to  be removed before it is set as version number: In *cura-build-environment\lib\site-packages\win32\lib\win32verstamp.py* in the function `stamp` replace the line  
+```bits = [int(i) for i in ver.split(".")]``` with ```bits = [int(i) for i in ver.replace("_TS2,"").split(".")]```
+
+I then replaced the default for versions in the CMakeLists.txt as I dont want to set like 10 environment variables. It looks like this:
+```cmake
+GetFromEnvironmentOrCache(FDMMATERIALS_BRANCH_OR_TAG "4.10" STRING "The name of the tag or branch to build for fdm_materials")
+GetFromEnvironmentOrCache(CURABINARYDATA_BRANCH_OR_TAG "4.10" STRING "The name of the tag or branch to build for cura-binary-data")
+GetFromEnvironmentOrCache(CURAENGINE_BRANCH_OR_TAG "4.10" STRING "The name of the tag or branch to build for CuraEngine")
+GetFromEnvironmentOrCache(URANIUM_BRANCH_OR_TAG "4.10" STRING "The name of the tag or branch to build for Uranium")
+GetFromEnvironmentOrCache(CURA_BRANCH_OR_TAG "4.10" STRING "The name of the tag or branch to build for Cura")
+GetFromEnvironmentOrCache(LIBCHARON_BRANCH_OR_TAG "4.10" STRING "The name of the tag or branch to build for libCharon")
+
+GetFromEnvironmentOrCache(CURAENGINE_ENABLE_MORE_COMPILER_OPTIMIZATION_FLAGS "ON" STRING "Whether to enable extra compiler optimization flags for CuraEngine")
+
+GetFromEnvironmentOrCache(EXTRA_REPOSITORIES "" STRING "Extra repositories to install. Expected to have a CMake based build system. Format is (<project name> <git URL> <cmake configuration options>\;)*")
+
+# Create the version-related variables
+GetFromEnvironmentOrCache(CURA_VERSION_MAJOR "4" STRING "Cura Major Version")
+GetFromEnvironmentOrCache(CURA_VERSION_MINOR "10_TS2" STRING "Cura Minor Version")
+GetFromEnvironmentOrCache(CURA_VERSION_PATCH "0" STRING "Cura Patch Version")
+GetFromEnvironmentOrCache(CURA_VERSION_EXTRA "${TAG_OR_BRANCH}" STRING "Cura Extra Version Information")
 ```
-./build/CuraEngine slice -v -j ../Cura/resources/definitions/dual_extrusion_printer.def.json -o "output/test.gcode" -e1 -s infill_line_distance=0 -e0 -l "/model_1.stl" -e1 -l "fully_filled_model.stl" 
+I recommend to also disable signing unless you know how to make it work correctly (I didn't) by changing ON to OFF like this (circa line 22):
+```cmake
+option(SIGN_PACKAGE "Perform signing of the created package. Implies BUILD_PACKAGE" OFF) 
 ```
 
-Run `CuraEngine help` for a general description of how to use the CuraEngine tool.
 
-[Set the environment variable](https://help.ubuntu.com/community/EnvironmentVariables) CURA_ENGINE_SEARCH_PATH to the appropriate paths, delimited by a colon e.g.
+## Modifying CuraEngine Cmake to compile the local code instead of the official one
+cura-build would by default load the cura-engine code from their github repository, so I changed the *cura-build\projects\CuraEngine.cmake* in the following ways:
+I replaced the ExternalProject_Add section with:
+```cmake
+ExternalProject_Add(CuraEngine
+    DOWNLOAD_COMMAND ""
+    SOURCE_DIR "C:\\Users\\Thomas\\Documents\\Cura\\CuraEngineGit\\CuraEngine"
+    BUILD_ALWAYS 1
+    CMAKE_GENERATOR "${cmake_generator}"
+    CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+               -DCMAKE_INSTALL_PREFIX=${EXTERNALPROJECT_INSTALL_PREFIX}
+               -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
+               -DCURA_ENGINE_VERSION=${CURA_VERSION}
+               -DENABLE_MORE_COMPILER_OPTIMIZATION_FLAGS=${CURAENGINE_ENABLE_MORE_COMPILER_OPTIMIZATION_FLAGS}
+               -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
+               ${extra_cmake_args}
+)
 ```
-CURA_ENGINE_SEARCH_PATH=/path/to/Cura/resources/definitions:/user/defined/path
+and removed the ``` add_dependencies(update CuraEngine-update) ``` line at the end.
+Ensure to change the path in such a way that it points to the source-code of curaEngine (the one with my new tree support in this repository) and to escape all backslashes with another backslash.
+
+## CxFreeze issues on Windows 10
+CxFreeze is what I suspect is creating the final executables from the compiled files. It seems to not like Windows 10 very much, so it chooses to try to use Linux paths anyway, which does not work. I suspect this can be fixed in a pretty way if you know how to configure cxFreeze, but I don't. So here is my workaround:
+In *cura-build-environment\lib\site-packages\cx_Freeze\common.py* in the function `process_path_specs` directly before the line ```processed_specs.append((source, target))``` I added:
+```python
+        for root, dirs, files in os.walk("C:\\Users\\Thomas\\Documents\\Cura\\cura-build-environment\\"):
+            for name in files:
+                if target==name:
+                    absolute_path=os.path.join(root,name)
+                    source=absolute_path
 ```
+Remember to replace the path of the build environment with the correct one on your system, and escape all backslashes with another backslash.
 
-Internals
-=========
+## Replacing fdmprinter.def.json
+AFTER building the result will be in the package folder. You will then need to replace the resources\definitions\fdmprinter.def.json with [this one](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/fdmprinter.def.json).
 
-The Cura Engine is structured as mainly .h files. This is not standard for a C++ project. However, using less cpp files makes the optimizer work harder and removes linking error issues. It's partially a result of lazyness but comes in handy for optimizations.
 
-The .h files contain different steps called from the main.cpp file. The main.cpp file contains the global slicing logic.
+# Possible future improvements:
+Automatically increase branch height when the angle is large.  
 
-The slicing process follows the following global steps:
-* Load 3D model
-* Analize and fix 3D model
-* Slice 3D model into 2D layers
-* Build LayerParts from sliced layers
-* Generate Insets
-* Generate up/down skins areas
-* Generate sparse infill areas
-* Generate GCode for each layer
+# Further Information
+I did not make the mini [hobgoblin](https://www.thingiverse.com/thing:2841750) I used to test. I used it because it cloak makes it very hard to slice in a way that the cloak is supported while not having a connection of the branch to the model.
+All screen-shots of the current tree support were made using version 4.7.1.
+Thank you to [DerGenaue](https://github.com/DerGenaue) for providing the images explaining the algorithm and creating the graphs out of the performance data.
 
-Each step has more logic in it. But this is a general overview.
-All data for the engine is stored in the "SliceDataStorage". It's important to remember that only the data from the previous step is valid.
 
-Coordinates are stored in 64bit integers as microns in the code. So if you see a value of 1000 then this mean 1mm of distance. This is because Clipper works on 64bit integers and microns give a high enough resolution without limiting the size too much. Note that there are some bits and pieces of code that need to be careful about 64bit overflows, especially calculating lengths sqrt(x*x+y*y) can cause overflows.
 
-OptimizedModel
-==============
-The OptimizedModel is a 3D model stored with vertex<->face relations. This gives touching face relations which are used later on to slice into layers faster.
-
-Slicer
-======
-While usually the whole GCode generation process is called 'slicing', the Slicer in the CuraEngine is the piece of code that generates layers. Each layer contains closed 2D polygons.
-These polygons are generated in a 2 step process. First all triangles are cut into lines per layer, for each layer a "line segment" is added to that layer.
-Next all these line-segments are connected to each other to make Polygons. The vertex<->face relations of the OptimizedModel help to make this process fast, as there is a huge chance that 2 connecting faces also make 2 connecting line-segments.
-This code also patches up small holes in the 3D model, so your model doesn't need to be a perfect Manifold. It also deals with incorrect normals, so it can flip around line-segments to fit end-to-end.
-The slicing code is found in [slicer.cpp](src/slicer.cpp)
-
-After the Slicer we have closed Polygons which can be used in Clipper.
-
-LayerParts
-==========
-An important concept to grasp is the idea of LayerParts. LayerParts are seperate parts inside a single layer. For example, in a solid cube each layer has a single LayerPart. However, in a table the layers which cover the legs have a LayerPart per leg, and thus there will be 4 LayerParts.
-A LayerPart is a seperated area inside a single layer which does not touch any other LayerParts. Most operations run on LayerParts as it reduces the amount of data to be processed. During GCode generation handling each LayerPart as a separate step makes sure you never travel between LayerParts which reduces the amount of external travel.
-LayerParts are generated after the Slicer step.
-The code for generating LayerParts is found in [layerParts.cpp](src/layerPart.cpp)
-
-In order to generate the LayerParts, Clipper is used. A Clipper union with extended results gives a list of Polygons with holes in them. Each polygon is a LayerPart, and the holes are added to this LayerPart.
-
-Insets
-======
-Insets are also called "Perimeters" or "Loops" sometimes. Generating the insets is only a small bit of code, as Clipper does most of the heavy lifting.
-The code for generating insets is found in [WallsComputation.cpp](src/WallsComputation.cpp).
-
-Up/Down skin
-============
-The skin code generates the fully filled areas, it does this with some heavy boolean Clipper action. The skin step uses data from different layers to get the job done. Check the code for details.
-The sparse infill area code is almost the same as the skin code. With the difference that it keeps the other areas and uses different offsets.
-The code for generating skin areas is found in [skin.cpp](src/skin.cpp).
-
-Note that these steps generate the areas, not the actual infill lines. The infill line paths are generated later on. So the result of this step are lists of Polygons which are the areas that need to be filled.
-
-GCode generation
-================
-The GCode generation is quite a large bit of code. As a lot is going on here. Important bits here are:
-* PathOrderOptimizer: This piece of code needs to solve a TravelingSalesmanProblem. Given a list of polygons/lines it tries to find the best order in which to print them. It currently does this by finding the closest next polygon to print. The code for this is found in [pathOrderOptimizer.cpp](src/pathOrderOptimizer.cpp).
-* Infill: This code generates a group of lines from an area. This is the code that generates the actual infill pattern. There is also a concentric infill function, which is currently not used. The code for this is found in [infill.cpp](src/infill.cpp) and the [infill subfolder](src/infill/).
-* Comb: The combing code is the code that tries to avoid holes when moving the head around without printing. This code also detects when it fails. The final GCode generator uses the combing code while generating the final GCode. So they interact closely. The combing code is found in [pathPlanning/Comb.cpp](src/pathPlanning/Comb.cpp)
-* GCodeExport: The GCode export is a 2 step process. First it collects all the paths for a layer that it needs to print, this includes all moves, prints, extrusion widths. And then it generates the final GCode. This is the only piece of code that has knowledge about GCode keywords and syntax to generate a different flavor of GCode it will be the only piece that needs adjustment. All volumatric calculations also happen here. The code for the GCode export is found at [FffGcodeWriter.cpp   ](src/FffGcodeWriter.cpp)
