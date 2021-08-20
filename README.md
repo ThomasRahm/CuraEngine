@@ -16,9 +16,9 @@ One will behave like regular Cura would, the other one will display a message if
 It is based on Cura 4.10, only the tree support code was replaced. Just run the Cura.exe after extracting the folder. You may need to import your profile (Just export the one you want to use and import it into this one).
 
 
-# What are bugs
+# When to report something as a bug
 
-These are the things I consider bugs with my new tree support:
+These are the things I consider bugs and would like to get a bug-report of it when encountered:  
 
 * The progress bar disappears (back to 0%) or becomes stuck.
 * It takes longer with the new implementation than with the old one (Assuming that the used feature in fact is implemented in the old tree support e.g. per mesh settings are not)  
@@ -155,6 +155,8 @@ My tree support:
 
 <details>
 <summary>Supports Roofs more consistently.</summary>
+
+The images show the bottom-most roof layer and a few layers of the branches below. In the current tree support some lines of the roof have a large distance from one point where support is below it to the next. My implementation ensures consistent spacing.
 
 Current tree support:  
 ![Current tree support](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Old%2520Ts%2520ROOF.PNG)
