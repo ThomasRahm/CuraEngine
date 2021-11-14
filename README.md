@@ -13,7 +13,7 @@ I reimplemented the tree support, as the current implementation does not meet my
 There are two versions available to download:  
 One will behave like regular Cura would, the other one will display a message if an issue is detected (at most 2 messages per slice, one for performance issues and one for logic issues). I would prefer if you would use this one, so you can easier see when an issue occurs. Slicing is paused while the message is displayed.
 
-It is based on Cura 4.10, only the tree support code was replaced. Just run the Cura.exe after extracting the folder. You may need to import your profile (Just export the one you want to use and import it into this one).
+It is based on Cura 4.12, only the tree support code was replaced. Just run the Cura.exe after extracting the folder. You may need to import your profile (Just export the one you want to use and import it into this one).
 
 
 # When to report something as a bug
@@ -204,6 +204,8 @@ Settings used for benchmarking:
 [Profile for current tree support](https://gist.github.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Test_Live.curaprofile)  
 [Profile for my tree support implementation](https://gist.github.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/Test_Me.curaprofile)  
 
+Benchmarking was done in the 4.10 Version.  
+
 </details>
 
 
@@ -276,12 +278,12 @@ CxFreeze does not support strings in version numbers, at it tries to set them to
 
 I then replaced the default for versions in the CMakeLists.txt as I dont want to set like 10 environment variables. It looks like this:
 ```cmake
-GetFromEnvironmentOrCache(FDMMATERIALS_BRANCH_OR_TAG "4.10" STRING "The name of the tag or branch to build for fdm_materials")
-GetFromEnvironmentOrCache(CURABINARYDATA_BRANCH_OR_TAG "4.10" STRING "The name of the tag or branch to build for cura-binary-data")
-GetFromEnvironmentOrCache(CURAENGINE_BRANCH_OR_TAG "4.10" STRING "The name of the tag or branch to build for CuraEngine")
-GetFromEnvironmentOrCache(URANIUM_BRANCH_OR_TAG "4.10" STRING "The name of the tag or branch to build for Uranium")
-GetFromEnvironmentOrCache(CURA_BRANCH_OR_TAG "4.10" STRING "The name of the tag or branch to build for Cura")
-GetFromEnvironmentOrCache(LIBCHARON_BRANCH_OR_TAG "4.10" STRING "The name of the tag or branch to build for libCharon")
+GetFromEnvironmentOrCache(FDMMATERIALS_BRANCH_OR_TAG "4.12" STRING "The name of the tag or branch to build for fdm_materials")
+GetFromEnvironmentOrCache(CURABINARYDATA_BRANCH_OR_TAG "4.12" STRING "The name of the tag or branch to build for cura-binary-data")
+GetFromEnvironmentOrCache(CURAENGINE_BRANCH_OR_TAG "4.12" STRING "The name of the tag or branch to build for CuraEngine")
+GetFromEnvironmentOrCache(URANIUM_BRANCH_OR_TAG "4.12" STRING "The name of the tag or branch to build for Uranium")
+GetFromEnvironmentOrCache(CURA_BRANCH_OR_TAG "4.12" STRING "The name of the tag or branch to build for Cura")
+GetFromEnvironmentOrCache(LIBCHARON_BRANCH_OR_TAG "4.12" STRING "The name of the tag or branch to build for libCharon")
 
 GetFromEnvironmentOrCache(CURAENGINE_ENABLE_MORE_COMPILER_OPTIMIZATION_FLAGS "ON" STRING "Whether to enable extra compiler optimization flags for CuraEngine")
 
@@ -289,7 +291,7 @@ GetFromEnvironmentOrCache(EXTRA_REPOSITORIES "" STRING "Extra repositories to in
 
 # Create the version-related variables
 GetFromEnvironmentOrCache(CURA_VERSION_MAJOR "4" STRING "Cura Major Version")
-GetFromEnvironmentOrCache(CURA_VERSION_MINOR "10_TS2" STRING "Cura Minor Version")
+GetFromEnvironmentOrCache(CURA_VERSION_MINOR "12_TS2" STRING "Cura Minor Version")
 GetFromEnvironmentOrCache(CURA_VERSION_PATCH "0" STRING "Cura Patch Version")
 GetFromEnvironmentOrCache(CURA_VERSION_EXTRA "${TAG_OR_BRANCH}" STRING "Cura Extra Version Information")
 ```
@@ -314,6 +316,7 @@ ExternalProject_Add(CuraEngine
                -DCURA_ENGINE_VERSION=${CURA_VERSION}
                -DENABLE_MORE_COMPILER_OPTIMIZATION_FLAGS=${CURAENGINE_ENABLE_MORE_COMPILER_OPTIMIZATION_FLAGS}
                -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
+               -DCMAKE_CXX_STANDARD=17
                ${extra_cmake_args}
 )
 ```
