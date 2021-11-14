@@ -7,8 +7,8 @@ I reimplemented the tree support, as the current implementation does not meet my
 
 # How to use:
 
-[**Download latest version with error messages**](https://github.com/ThomasRahm/CuraEngine/releases/latest/download/Tree.Support.2.Mod.Cura.4.10.With.error.messages.zip) (Recommended)  
-[Download latest version without error messages](https://github.com/ThomasRahm/CuraEngine/releases/latest/download/Tree.Support.2.Mod.Cura.4.10.Without.error.messages.zip) (If the error messages annoy you)  
+[**Download latest version with error messages**](https://github.com/ThomasRahm/CuraEngine/releases/latest/download/Tree.Support.2.Mod.Cura.4.12.With.error.messages.zip) (Recommended)  
+[Download latest version without error messages](https://github.com/ThomasRahm/CuraEngine/releases/latest/download/Tree.Support.2.Mod.Cura.4.12.Without.error.messages.zip) (If the error messages annoy you)  
 
 There are two versions available to download:  
 One will behave like regular Cura would, the other one will display a message if an issue is detected (at most 2 messages per slice, one for performance issues and one for logic issues). I would prefer if you would use this one, so you can easier see when an issue occurs. Slicing is paused while the message is displayed.
