@@ -36,12 +36,6 @@ My goal is a universal set and forget solution, so if you have any feedback, e.g
 * Slicing with cross support and 0% support density causes the slice progress to hang. This is not an issue of my implementation and to my understanding also occurs in the official version. [Bug report of this issue](https://github.com/Ultimaker/CuraEngine/issues/1412).  
 * There are issues when `Minimum Support X/Y Distance` is larger than `Support X/Y Distance`. This can trigger an error message if the version displaying them is used. I will not fix this one, except by maybe disallowing it in the UI, as I think the assumption that a minimum is not larger than the expected one is reasonable.  
 
-## Poll about the expected behavior of Minimum Support Area  
-There is a setting `Minimum Support Area` in Cura, which I am not sure if I interpret the same way someone without knowledge of the internal working of it would. 
-When using regular support it causes no overhang smaller than this to be supported, which causes no support polygon to be smaller than this.  
-For the tree support, should this also limit how large an overhang has to be before it is supported or should it cause the tip of a branch to have at least this area (or maybe both)?  
-**[I made a poll](https://www.strawpoll.me/45550253)** and would like your feedback. Currently the first interpretation (overhang area size) is implemented.  
-
 # Settings:
 
 ## Recommended settings
@@ -170,7 +164,7 @@ Both Overlap (This causes filament be extruded twice at the same location (Once 
 
 </details>
 
-Tree Support Branch Diameter and Tree Support Branch Diameter Angle behave like in the current tree support implementation, but `Tree Support Branch Diameter Angle` is ignored when a diameter increase would invalidate a branch, as a small branch has a higher chance of supporting the model than no branch at all.
+`Tree Support Branch Diameter` and `Tree Support Branch Diameter Angle` behave like in the current tree support implementation, but `Tree Support Branch Diameter Angle` is ignored when a diameter increase would invalidate a branch, as a small branch has a higher chance of supporting the model than no branch at all.
 
 # What does it do better:
 <details>
