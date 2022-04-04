@@ -7,8 +7,8 @@ I reimplemented the tree support, as the current implementation does not meet my
 
 # How to use:
 
-[**Download latest version with error messages**](https://github.com/ThomasRahm/CuraEngine/releases/latest/download/Tree.Support.2.Mod.Cura.4.12.With.error.messages.zip) (Recommended)  
-[Download latest version without error messages](https://github.com/ThomasRahm/CuraEngine/releases/latest/download/Tree.Support.2.Mod.Cura.4.12.Without.error.messages.zip) (If the error messages annoy you)  
+[**Download latest version with error messages**](https://github.com/ThomasRahm/CuraEngine/releases/latest/download/Tree.Support.2.Mod.Cura.4.13.With.error.messages.zip) (Recommended)  
+[Download latest version without error messages](https://github.com/ThomasRahm/CuraEngine/releases/latest/download/Tree.Support.2.Mod.Cura.4.13.Without.error.messages.zip) (If the error messages annoy you)  
 
 There are two versions available to download:  
 One will behave like regular Cura would, the other one will display a message if an issue is detected (at most 2 messages per slice, one for performance issues and one for logic issues). I would prefer if you would use this one, so you can easier see when an issue occurs. Slicing is paused while the message is displayed.
@@ -119,6 +119,56 @@ Simulated regular support pattern:
 
 </details>
 
+<details>
+<summary>Tree Support Tip Diameter</summary>
+
+Defines the diameter of the top most support area of a branch.
+Using a large diameter without having a reasonable large support density would obviously not print well.
+
+
+<details>
+<summary>Can replace tips with roof!</summary>
+
+Happens automatically when `Minimum Support Roof Area` is smaller than a circle with diameter `Tree Support Tip Diameter` and roofs are enabled.
+
+Large Tip Diameter with minimum roof area being small:  
+![Tip radius large interface](https://gist.github.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/5784f90b44120f94c5a39ddcf1df47e40e9b2ab2/Tip%2520radius%2520large%2520interface.PNG) 
+
+
+Large Tip Diameter with minimum roof area being large:  
+![Tip Radius large2](https://gist.github.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/5784f90b44120f94c5a39ddcf1df47e40e9b2ab2/Tip%2520radius%2520large2.PNG)
+
+</details>
+
+Small Tip Diameter:  
+![Small Tip Diameter](https://gist.github.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/5784f90b44120f94c5a39ddcf1df47e40e9b2ab2/Tip%2520radius%2520small.PNG)
+
+Large Tip Diameter:  
+![Large Tip Diameter](https://gist.github.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/5784f90b44120f94c5a39ddcf1df47e40e9b2ab2/Tip%2520radius%2520large.PNG)
+
+</details>
+
+<details>
+<summary>Support Interface Priority</summary>
+
+This setting defines how support roof and regular support (e.g. from other branches) interact.  
+
+Support preferred(Support Area Overwrites Interface Area):  
+![Support Area Overwrites Interface Area](https://gist.github.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/5784f90b44120f94c5a39ddcf1df47e40e9b2ab2/Interface%2520pref%2520support.PNG)  
+
+Interface preferred(Interface Area Overwrites Support Area):  
+![Interface Area Overwrites Support Area](https://gist.github.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/5784f90b44120f94c5a39ddcf1df47e40e9b2ab2/Interface%2520pref%2520interface.PNG)  
+
+Support lines preferred(Support Lines Overwrite Interface Area):  
+![Support Lines Overwrite Interface Area](https://gist.github.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/5784f90b44120f94c5a39ddcf1df47e40e9b2ab2/Interface%2520pref%2520support%2520lines.PNG)  
+
+Interface Lines preferred(Interface Lines Overwrite Support Area. This one will not be what you want when Support Wall Count > 0):  
+![Interface Lines Overwrite Support Area](https://gist.github.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/5784f90b44120f94c5a39ddcf1df47e40e9b2ab2/Interface%2520pref%2520interface%2520lines.PNG)  
+
+Both Overlap (This causes filament be extruded twice at the same location (Once the support and once the roof). This may cause issues when printing. Use with care!):  
+![Both Overlap](https://gist.github.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/5784f90b44120f94c5a39ddcf1df47e40e9b2ab2/Interface%2520pref%2520overlap.PNG)  
+
+</details>
 
 Tree Support Branch Diameter and Tree Support Branch Diameter Angle behave like in the current tree support implementation, but `Tree Support Branch Diameter Angle` is ignored when a diameter increase would invalidate a branch, as a small branch has a higher chance of supporting the model than no branch at all.
 
