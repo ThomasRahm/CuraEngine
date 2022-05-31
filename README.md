@@ -7,13 +7,13 @@ I reimplemented the tree support, as the current implementation does not meet my
 
 # How to use:
 
-[**Download latest version with error messages**](https://github.com/ThomasRahm/CuraEngine/releases/latest/download/Tree.Support.2.Mod.Cura.4.13.With.error.messages.zip) (Recommended)  
-[Download latest version without error messages](https://github.com/ThomasRahm/CuraEngine/releases/latest/download/Tree.Support.2.Mod.Cura.4.13.Without.error.messages.zip) (If the error messages annoy you)  
+[**Download latest version with error messages**](https://github.com/ThomasRahm/CuraEngine/releases/latest/download/Tree.Support.2.Mod.Cura.5.0.With.error.messages.zip) (Recommended)  
+[Download latest version without error messages](https://github.com/ThomasRahm/CuraEngine/releases/latest/download/Tree.Support.2.Mod.Cura.5.0.Without.error.messages.zip) (If the error messages annoy you)  
 
 There are two versions available to download:  
 One will behave like regular Cura would, the other one will display a message if an issue is detected (at most 2 messages per slice, one for performance issues and one for logic issues). I would prefer if you would use this one, so you can easier see when an issue occurs. Slicing is paused while the message is displayed.
 
-It is based on Cura 4.13, only the tree support code was replaced. Just run the Cura.exe after extracting the folder. You may need to import your profile (Just export the one you want to use and import it into this one).
+It is based on Cura 5.0, only the tree support code was replaced. Just run the Ultimaker-Cura.exe after extracting the folder. You may need to import your profile (Just export the one you want to use and import it into this one).
 
 
 # When to report something as a bug
@@ -311,77 +311,42 @@ The circles, which center-point was calculated in 3. are drawn. Here also happen
 
 The code for the modified tree support can be found in the `tree_support_2` branch. **The code in the master branch is old, and should be ignored.** If you want to compile the version with error messages enabled, the code can be found in `tree_support_2_error_detection`. The code for the error messages is Windows only.
 
-To compile it yourself mostly follow the official [cura-build](https://github.com/Ultimaker/cura-build) guide (I recommend using the [cura-build-environment](https://github.com/Ultimaker/cura-build-environment) to build all requirements). This part is not designed to be user-friendly, it is to provide hints to the very few of you who want to compile it themselves for some reason. Most modifications are to either ensure that the version contains a unique identifier ("_TS2") to avoid issues with cached definitions (found in *AppData\Local\cura*) or to workaround issues with Windows 10 (as for obvious reasons most devs choose a more reasonable OS to develop on (read Linux), the build process is not working flawless on Windows 10). I never compiled this under Linux, so you are even more on your own there, but I suspect just changing the cura-engine cmake to point the the modified code and contain the unique identifier, setting the correct version and replacing the fdmprinter.def.json could be enough.  
+To compile it yourself mostly follow the official [cura-build-environment](https://github.com/Ultimaker/cura-build-environment/). This part is not designed to be user-friendly, it is to provide hints to the very few of you who want to compile it themselves for some reason. Most modifications are to either ensure that the version contains a unique identifier ("~TreeSupport2") to avoid issues with cached definitions (found in *AppData\Local\cura*). I never compiled this under Linux, so you are even more on your own there, but I suspect just changing the cura-engine cmake to point the the modified code and contain the unique identifier, setting the correct version and replacing the fdmprinter.def.json could be enough.  
 
-(Remember to ensure cura-build-environment is in your path variable. If you have issues building/using the build-environment on Windows 10 check if your issue is [one of the few I encountered](https://github.com/Ultimaker/cura-build-environment/issues/95))
 
-## Set Version to 4.x_TS2 (here done by editing the CMakeLists file)
+## Set Version to 5.x~TreeSupport2
 
-CxFreeze does not support strings in version numbers, at it tries to set them to the metadata of the executable. So as a workaround the _TS2 will have to  be removed before it is set as version number: In *cura-build-environment\lib\site-packages\win32\lib\win32verstamp.py* in the function `stamp` replace the line  
-```bits = [int(i) for i in ver.split(".")]``` with ```bits = [int(i) for i in ver.replace("_TS2,"").split(".")]```
-
-I then replaced the default for versions in the CMakeLists.txt as I dont want to set like 10 environment variables. It looks like this:
+I replaced the line (line 59 for me) in the `CMakeList.txt` of cura-build-environment that sets the Cura version so that `~TreeSupport2` is appended to the string. It looks like this:
 ```cmake
-GetFromEnvironmentOrCache(FDMMATERIALS_BRANCH_OR_TAG "4.13" STRING "The name of the tag or branch to build for fdm_materials")
-GetFromEnvironmentOrCache(CURABINARYDATA_BRANCH_OR_TAG "4.13" STRING "The name of the tag or branch to build for cura-binary-data")
-GetFromEnvironmentOrCache(CURAENGINE_BRANCH_OR_TAG "4.13" STRING "The name of the tag or branch to build for CuraEngine")
-GetFromEnvironmentOrCache(URANIUM_BRANCH_OR_TAG "4.13" STRING "The name of the tag or branch to build for Uranium")
-GetFromEnvironmentOrCache(CURA_BRANCH_OR_TAG "4.13" STRING "The name of the tag or branch to build for Cura")
-GetFromEnvironmentOrCache(LIBCHARON_BRANCH_OR_TAG "4.13" STRING "The name of the tag or branch to build for libCharon")
-
-GetFromEnvironmentOrCache(CURAENGINE_ENABLE_MORE_COMPILER_OPTIMIZATION_FLAGS "ON" STRING "Whether to enable extra compiler optimization flags for CuraEngine")
-
-GetFromEnvironmentOrCache(EXTRA_REPOSITORIES "" STRING "Extra repositories to install. Expected to have a CMake based build system. Format is (<project name> <git URL> <cmake configuration options>\;)*")
-
-# Create the version-related variables
-GetFromEnvironmentOrCache(CURA_VERSION_MAJOR "4" STRING "Cura Major Version")
-GetFromEnvironmentOrCache(CURA_VERSION_MINOR "13_TS2" STRING "Cura Minor Version")
-GetFromEnvironmentOrCache(CURA_VERSION_PATCH "0" STRING "Cura Patch Version")
-GetFromEnvironmentOrCache(CURA_VERSION_EXTRA "${TAG_OR_BRANCH}" STRING "Cura Extra Version Information")
+set(_default_cura_version "${CURA_VERSION_MAJOR}.${CURA_VERSION_MINOR}.${CURA_VERSION_PATCH}~TreeSupport2")
 ```
-I recommend to also disable signing unless you know how to make it work correctly (I didn't) by changing ON to OFF like this (circa line 22):
-```cmake
-option(SIGN_PACKAGE "Perform signing of the created package. Implies BUILD_PACKAGE" OFF) 
-```
+Also you should ensure all other projects are fetched in the correct version. I did this by changing all default versions(main or master) to the version i am currently building. If unsure check the corresponding repositories for matching branch names. The files i changed the default versions in are located in the projects folder of the cura-build-environment files.
 
 
 ## Modifying CuraEngine Cmake to compile the local code instead of the official one
-cura-build would by default load the cura-engine code from their github repository, so I changed the *cura-build\projects\CuraEngine.cmake* in the following ways:
+cura-build would by default load the cura-engine code from their github repository, so I changed the *cura-build-environment\projects\CuraEngine.cmake* in the following ways:
 I replaced the ExternalProject_Add section with:
 ```cmake
 ExternalProject_Add(CuraEngine
     DOWNLOAD_COMMAND ""
     SOURCE_DIR "C:\\Users\\Thomas\\Documents\\Cura\\CuraEngineGit\\CuraEngine"
     BUILD_ALWAYS 1
-    CMAKE_GENERATOR "${cmake_generator}"
-    CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-               -DCMAKE_INSTALL_PREFIX=${EXTERNALPROJECT_INSTALL_PREFIX}
-               -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
-               -DCURA_ENGINE_VERSION=${CURA_VERSION}
-               -DENABLE_MORE_COMPILER_OPTIMIZATION_FLAGS=${CURAENGINE_ENABLE_MORE_COMPILER_OPTIMIZATION_FLAGS}
-               -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
-               -DCMAKE_CXX_STANDARD=17
-               ${extra_cmake_args}
+        CMAKE_GENERATOR ${CMAKE_GENERATOR}
+        CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+                   -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+                   -DCMAKE_PREFIX_PATH=${CMAKE_INSTALL_PREFIX}
+                   -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
+                   -DCURA_ENGINE_VERSION=${CURA_ENGINE_VERSION})
 )
 ```
-and removed the ``` add_dependencies(update CuraEngine-update) ``` line at the end.
-Ensure to change the path in such a way that it points to the source-code of curaEngine (the one with my new tree support in this repository) and to escape all backslashes with another backslash.
+Ensure to change the path in such a way that it points to the source-code of CuraEngine (the one with my new tree support in this repository) and to escape all backslashes with another backslash.
 
-## CxFreeze issues on Windows 10
-CxFreeze is what I suspect is creating the final executables from the compiled files. It seems to not like Windows 10 very much, so it chooses to try to use absolute Linux paths anyway, which does not work. I suspect this can be fixed in a pretty way if you know how to configure cxFreeze, but I don't. So here is my workaround:
-In *cura-build-environment\lib\site-packages\cx_Freeze\common.py* in the function `process_path_specs` directly before the line ```processed_specs.append((source, target))``` I added:
-```python
-        for root, dirs, files in os.walk("C:\\Users\\Thomas\\Documents\\Cura\\cura-build-environment\\"):
-            for name in files:
-                if target==name:
-                    absolute_path=os.path.join(root,name)
-                    source=absolute_path
-```
-Remember to replace the path of the build environment with the correct one on your system, and escape all backslashes with another backslash.
 
 ## Replacing fdmprinter.def.json
-AFTER building the result will be in the package folder. You will then need to replace the *resources\definitions\fdmprinter.def.json* with [this one](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/fdmprinter.def.json).
+AFTER building the result will be in the package folder. You will then need to replace the *share\cura\resources\definitions\fdmprinter.def.json* with [this one](https://gist.githubusercontent.com/ThomasRahm/770a93576a7e4f68aa21d94545a474d2/raw/fdmprinter.def.json).
 
+## Fix for 3MFReader plugin showing an error when launching Cura
+If you run into the issue that the 3MFReader plugin is broken, just take the CuraEngine.exe and the Ultimaker-Cura.exe that was just compiled, copy the official installation and drop these two in there. Remember to replace the fdmprinter.def.json again if you do this.
 
 # Possible future improvements:
 Automatically increase branch height when the angle is large.  
