@@ -7,7 +7,7 @@ I reimplemented the tree support, as the current implementation does not meet my
 
 # How to use:
 
-[**Download the official ultimaker xmas alpha that contains this Tree Support**](https://github.com/Ultimaker/Cura/releases/tag/5.3.0-alpha%2Bxmas) (Recommended)
+[**Download the official ultimaker. It already contains this Tree Support**](https://github.com/Ultimaker/Cura/releases/) (Recommended)
 
 If you want my release from before the ultimaker xmas alpha:  
 [Download with error messages](https://github.com/ThomasRahm/CuraEngine/releases/latest/download/Tree.Support.2.Mod.Cura.5.2.With.error.messages.zip)  
@@ -337,7 +337,7 @@ The circles, which center-point was calculated in 3. are drawn. Here also happen
 
 </details>
 
-# Hints for compiling (Deprecated: Will update later)
+# Hints for compiling (Deprecated. Will not be updated)
 
 The code for the modified tree support can be found in the `tree_support_2` branch. **The code in the master branch is old, and should be ignored.** If you want to compile the version with error messages enabled, the code can be found in `tree_support_2_error_detection`. The code for the error messages is Windows only.
 
