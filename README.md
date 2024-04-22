@@ -7,7 +7,7 @@ I reimplemented the tree support, as the current implementation does not meet my
 
 # How to use:
 
-[**Download the official ultimaker. It already contains this Tree Support**](https://github.com/Ultimaker/Cura/releases/) (Recommended)
+[**Download the official UltiMaker Cura. It already contains this Tree Support**](https://github.com/Ultimaker/Cura/releases/) (Recommended)
 
 If you want my release from before the ultimaker xmas alpha:  
 [Download with error messages](https://github.com/ThomasRahm/CuraEngine/releases/latest/download/Tree.Support.2.Mod.Cura.5.2.With.error.messages.zip)  
