@@ -210,6 +210,7 @@ Generate support skin for any tips that have at least this diameter.
 ## Currently known limitations:
 - If custom angles are set for the infill the result may not be what the end-user expects.
 - Enforce Initial Layer Diameter may cause an effectively higher Branch Density. When tips are multiple mm large, placing one tip ever few cm seems counter productive.
+- Cradle XY distance can be larger than intended if the line hits the model at a small angle, especially if the model surface is uneven. This is rare though.
 
 ## Things that should be done
 - Reducing the amount of settings (I would like some input in that regard) 
