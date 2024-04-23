@@ -176,7 +176,9 @@ Copy the CuraEngine.exe and the folder in the zip to your Cura installation of t
 
 <details>
   <summary>Support Skin Height</summary>
+  
   Height of Support Skin generated to support cradle/interface/model parts that would fall inside of a support area. What i call Support Skin is just a support area with high density zig-zag infill.
+
    
    Small Support Skin Height:
    ![Small Support Skin Height](https://gist.githubusercontent.com/ThomasRahm/4085f269c710a517ee1d9fcfe11976f8/raw/Low%2520Skin%2520Height.png)
@@ -201,6 +203,7 @@ Copy the CuraEngine.exe and the folder in the zip to your Cura installation of t
 
 <details>
   <summary>Support Skin for Tips Threshold</summary>
+  
 Generate support skin for any tips that have at least this diameter.
    
   
