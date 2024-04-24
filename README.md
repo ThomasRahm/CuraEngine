@@ -220,4 +220,4 @@ Generate support skin for any tips that have at least this diameter.
 - Evaluating what the default settings should be.
 - Try to shorten cradle lines that collide with branches before removing them. Shorten cradle lines that are longer than they should be if the reason that they are longer is a cradle line above it that was removed.
 - Refactoring to improve code quality.
-- Looking over and solving/deciding what to to for all "Todo" comments.
+- Looking over and solving/deciding what to do for all "Todo" comments.
