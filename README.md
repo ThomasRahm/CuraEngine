@@ -9,7 +9,16 @@ One issue of tree supports is that pointy overhangs are more prone to failing. T
 
 # Download and Installation (Link will be added soon)
 
-Copy the CuraEngine.exe and the folder in the zip to your Cura installation of the corresponding version. To remove reinstall said Cura version. Note that the new settings will not be visible by default.
+Install permanently:
+Paste the content of this zip into your Cura 5.7 installation directory to install it (replacing CuraEngine.exe).
+To remove it remove Cura 5.7, delete the remaining folders in your installation directory and then install Cura 5.7 again.
+
+Install temporarily:
+If you want to use this and the regular Cura 5.7 at the same time, __copy__ your Cura 5.7 installation into another folder and follow the installation as if this new folder were your installation directory(Paste the content of this zip into it, replacing CuraEngine.exe).  
+To run the modified Cura start the **UltiMaker-Cura.exe** in said directory.
+To remove just delete the directory.
+
+__Note that the new settings will not be visible by default.__
 
 # Settings:
 
