@@ -218,6 +218,12 @@ Generate support skin for any tips that have at least this diameter.
   
 </details>
 
+# Code
+
+The code is in a seperate branch found [here](https://github.com/ThomasRahm/CuraEngine/tree/tree_support_2).
+The readme is in a sperate branch to exclude it from the correspoding [pull request](https://github.com/Ultimaker/CuraEngine/pull/1880).
+
+
 ## Currently known limitations:
 - If custom angles are set for the infill the result may not be what the end-user expects.
 - Enforce Initial Layer Diameter may cause an effectively higher Branch Density. When tips are multiple mm large, placing one tip ever few cm seems counter productive.
