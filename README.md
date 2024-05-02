@@ -112,9 +112,9 @@ __Note that the new settings will not be visible by default.__
 </details>
 
 <details>
-  <summary>Cradle Tip Size</summary>
+  <summary>Cradle Base Support Area Diameter</summary>
 
-  Percentage of size of the tips supporting the pointy overhang. 0% means the tip with have the size of regular tips. 100% means they will have a diameter of branch diameter.  
+  Size of the tips below an pointy overhang overhang. Also the size of tips below lines if `Large Cradle Line Tips` is active and the roof base if `Cradle Roof Type` is `Large Cradle and Base`  
    
 
    Small Cradle Tip Size:
