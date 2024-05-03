@@ -16,7 +16,7 @@ To remove it remove Cura 5.7, delete the remaining folders in your installation 
 Install temporarily:
 If you want to use this and the regular Cura 5.7 at the same time, __copy__ your Cura 5.7 installation into another folder and follow the installation as if this new folder were your installation directory(Paste the content of this zip into it, replacing CuraEngine.exe).  
 To run the modified Cura start the **UltiMaker-Cura.exe** in said directory.
-To remove just delete the directory.
+To remove just delete the copy of your Cura installation that you copied the files into.
 
 __Note that the new settings will not be visible by default.__
 
