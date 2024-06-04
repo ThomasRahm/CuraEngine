@@ -7,7 +7,7 @@ One issue of tree supports is that pointy overhangs are more prone to failing. T
 ![Example Cradle](https://gist.githubusercontent.com/ThomasRahm/4085f269c710a517ee1d9fcfe11976f8/raw/Example.PNG)
 
 
-# [Download](https://github.com/ThomasRahm/CuraEngine/releases/tag/5.7.TS2_Cradle.R0) and Installation
+# [Download](https://github.com/ThomasRahm/CuraEngine/releases/tag/5.7.TS2_Cradle.R2) and Installation
 
 Install permanently:
 Paste the content of this zip into your Cura 5.7 installation directory to install it (replacing CuraEngine.exe).
