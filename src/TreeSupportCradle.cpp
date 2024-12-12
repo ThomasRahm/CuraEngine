@@ -540,7 +540,8 @@ void SupportCradleGeneration::calculateFloatingParts(const SliceDataStorage& sto
                     if(side_cradle_enabled)
                     {
                         //Ensures output for testing purposes. TODO remove
-                        if (layer_idx * layer_height % 50000 == 0 && layer_idx > 20 || layer_idx + 5 * (1000 / layer_height) == mesh.layers.size())
+                        if ((layer_idx * layer_height) / 10000 != ((layer_idx - 1) * layer_height) / 10000 && layer_idx > 20
+                            || layer_idx + 5 * (1000 / layer_height) == mesh.layers.size())
                         {
                             /*
                             mfem::Mesh* mfem_mesh = toMfemMeshRasterized(mesh, mesh_idx, area_info);
