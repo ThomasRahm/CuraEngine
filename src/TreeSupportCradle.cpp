@@ -97,6 +97,10 @@ void SupportCradleGeneration::getLayerDeformation(
 
         // todo tan did make more sense but as values are small, it should be similar to linear
         deform_part[direction_idx] = (deformation_constant / (std::pow(assumed_thickness_in_direction, 1) * (std::pow(assumed_thickness_opposite_direction , 0.33))));
+        //= (deformation_constant / (std::pow(assumed_thickness_in_direction/20,2) * (log(1+assumed_thickness_opposite_direction/2000))));
+        //= (deformation_constant / (std::pow(assumed_thickness_in_direction/100,3)* std::pow(assumed_thickness_opposite_direction,0.75)) );
+        //= (deformation_constant / (std::max(1.0,2*assumed_thickness_in_direction/1000) * assumed_t○hickness_in_direction * (1 + std::sqrt(std::max(0.0,
+        //assumed_thickness_opposite_direction)))));
     }
 }
 
@@ -865,11 +869,13 @@ void SupportCradleGeneration::runMfemExample(mfem::Mesh* mesh, std::string prefi
     //    corresponding to the linear elasticity integrator with piece-wise
     //    constants coefficient lambda and mu.
     mfem::Vector lambda(mesh->attributes.Max());
-    lambda = 3.500 * 1000.0 * 1000.0 * 1000.0;
+    lambda = 206600000; // TPU
+    //lambda = 1300000000; //3.500 * 1000.0 * 1000.0 * 1000.0;
     //lambda(0) = lambda(1)*50;
     mfem::PWConstCoefficient lambda_func(lambda);
     mfem::Vector mu(mesh->attributes.Max());
-    mu = 0.800  * 1000.0 * 1000.0 * 1000.0;;
+    mu = 58300000; // TPU
+   // mu = 3000000000;//0.800  * 1000.0 * 1000.0 * 1000.0;;
     //mu(0) = mu(1)*50;
     mfem::PWConstCoefficient mu_func(mu);
 
