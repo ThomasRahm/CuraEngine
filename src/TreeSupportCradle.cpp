@@ -335,7 +335,7 @@ double SupportCradleGeneration::getTotalDeformation(size_t mesh_idx, const Slice
     double horizontal_distance = element->min_box.minimumDistance(largest_deformation_in_z_direction_element->min_box) * horizontal_movement_weight;
     double result_deformation_z = largest_deformation_in_z_direction_deformation;
     element->total_deformation_maximum = result_deformation_xy+result_deformation_z;
-        "at %d layer xy %lf z %lf horizontal distance was %lf result is %lf, most xy deform on layer %d most z on layer %d\n",
+    /*printf("at %d layer xy %lf z %lf horizontal distance was %lf result is %lf, most xy deform on layer %d most z on layer %d\n",
         layer_idx,
         result_deformation_xy,
         result_deformation_z,
