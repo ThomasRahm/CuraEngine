@@ -11,7 +11,7 @@ One issue of tree supports is that pointy overhangs are more prone to failing. T
 
 Install permanently:
 Paste the content of this zip into your Cura 5.10 installation directory to install it (replacing CuraEngine.exe).
-To remove it remove Cura 5.10, delete the remaining folders in your installation directory and then install Cura 5.7 again.
+To remove it remove Cura 5.10, delete the remaining folders in your installation directory and then install Cura 5.10 again.
 
 Install temporarily:
 If you want to use this and the regular Cura 5.10 at the same time, __copy__ your Cura 5.10 installation into another folder and follow the installation as if this new folder were your installation directory(Paste the content of this zip into it, replacing CuraEngine.exe).  
